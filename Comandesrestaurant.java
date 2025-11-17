@@ -5,7 +5,10 @@ import java.util.Scanner;
 
 public class Comandesrestaurant {
 
-    public static void main(String[] args) {
+       static String ticketActual = "";
+       static double totalSenseIVAActual = 0;
+       static String nomClientActual = "";
+    public static void main (String[] args) {
          boolean sortir =false;
          Scanner p5 = new Scanner(System.in);
           while (!sortir) {
@@ -94,10 +97,12 @@ public class Comandesrestaurant {
         System.out.printf("%-43s %10.2f €\n", "TOTAL A PAGAR:", totalAmbIVA);
         System.out.println("==================================================");
         boolean correcte = false;
+
         while (!correcte) {
         System.out.println("És correcte?");
         System.out.println("1. Sí");
         System.out.println("2. No");
+
         try {
             int opcio = p5.nextInt();
             p5.nextLine();
@@ -117,12 +122,67 @@ public class Comandesrestaurant {
             p5.nextLine();
         }
     }
+    ticketActual = ticket;
+    totalSenseIVAActual = totalSenseIVA;
+    nomClientActual = nomClient;
+
 }
      public static void ActualitzaTiquet (Scanner p5) {
-     }
      
-      public static void UltimTiquet (Scanner p5) {
+     if (ticketActual.isEmpty()) {
+        System.out.println("No hi ha cap ticket per actualitzar");
+        return;
+     }
+     p5.nextLine();
+     String resposta;
 
-      }
+     do {
+        System.out.println("Introdueix el producte: ");
+        String producte = p5.nextLine();
+
+        System.out.println("Preu unitari (€): ");
+        double preu = p5.nextDouble();
+
+        System.out.println("Quantitat: ");
+        int quantitat = p5.nextInt();
+        p5.nextLine();
+
+        double subtotal = preu * quantitat;
+        totalSenseIVAActual += subtotal;
+
+        ticketActual += String.format(
+            "%-15s %-11d %-12.2f € %.2f€\n",
+            producte, quantitat, preu, subtotal
+        );
+
+        System.out.println("Vols afegir un altre producte? (s/n): ");
+        resposta = p5.nextLine().trim().toLowerCase();
+
+    } while (resposta.equals("s"));
+
+        System.out.println("Tiquet actualitzat correctament!");
+    }
+      public static void UltimTiquet (Scanner p5) {
+    if (ticketActual.isEmpty()) {
+        System.out.println("No hi ha cap tiquet guardat.");
+        return;
     }
 
+    double iva = totalSenseIVAActual * 0.10;
+    double totalAmbIVA = totalSenseIVAActual + iva;
+
+    System.out.println("______________________________________");
+    System.out.println("=============== TIQUET ===============");
+    System.out.println("______________________________________");
+    System.out.println("Client: " + nomClientActual + "\n");
+
+    System.out.println("Producte        Quantitat   Preu unit.   Subtotal");
+    System.out.println("--------------------------------------------------");
+    System.out.print(ticketActual);
+    System.out.println("--------------------------------------------------");
+    System.out.printf("%-43s %10.2f €\n", "Total sense IVA:", totalSenseIVAActual);
+    System.out.printf("%-43s %10.2f €\n", "IVA (10%):", iva);
+    System.out.printf("%-43s %10.2f €\n", "TOTAL A PAGAR:", totalAmbIVA);
+    System.out.println("==================================================");
+}
+}
